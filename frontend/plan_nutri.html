@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Plan Nutricional IA</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#17cf17",
+              "background-light": "#f6f8f6",
+              "background-dark": "#112111",
+            },
+            fontFamily: {
+              display: ["Lexend", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark font-display">
+    <div
+      class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden text-gray-800 dark:text-gray-200"
+    >
+      <!-- Top App Bar -->
+      <div
+        class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-gray-200 dark:border-gray-800"
+      >
+        <div class="flex size-12 shrink-0 items-center">
+          <span
+            class="material-symbols-outlined text-[#111811] dark:text-gray-200"
+            > <a href="./home_page.html">arrow_back</a></span
+          >
+        </div>
+        <h2
+          class="text-[#111811] dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center"
+        >
+          Tu Plan Nutricional
+        </h2>
+        <div class="flex w-12 items-center justify-end">
+          <button
+            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-[#111811] dark:text-gray-200 gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0"
+          >
+            <span class="material-symbols-outlined">share</span>
+          </button>
+        </div>
+      </div>
+      <!-- Main Content -->
+      <main class="flex-1 pb-32">
+        <!-- Headline Text -->
+        <h1
+          class="text-[#111811] dark:text-gray-100 tracking-light text-[32px] font-bold leading-tight px-4 text-left pb-3 pt-6"
+        >
+          Dieta para Pérdida de Grasa
+        </h1>
+        <!-- Stats -->
+        <div class="flex flex-wrap gap-4 p-4">
+          <div
+            class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50"
+          >
+            <p
+              class="text-[#111811] dark:text-gray-300 text-base font-medium leading-normal"
+            >
+              Calorías
+            </p>
+            <p id="calorias" 
+              class="text-amber-500 tracking-light text-2xl font-bold leading-tight"
+            >
+              2,100 kcal
+            </p>
+          </div>
+          <div
+            class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50"
+          >
+            <p
+              class="text-[#111811] dark:text-gray-300 text-base font-medium leading-normal"
+            >
+              Proteínas
+            </p>
+            <p id="proteinas" 
+              class="text-[#111811] dark:text-gray-100 tracking-light text-2xl font-bold leading-tight"
+            >
+              150g
+            </p>
+          </div>
+          <div
+            class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50"
+          >
+            <p
+              class="text-[#111811] dark:text-gray-300 text-base font-medium leading-normal"
+            >
+              Carbs.
+            </p>
+            <p id="carbs"
+              class="text-[#111811] dark:text-gray-100 tracking-light text-2xl font-bold leading-tight"
+            >
+              180g
+            </p>
+          </div>
+          <div
+            class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50"
+          >
+            <p
+              class="text-[#111811] dark:text-gray-300 text-base font-medium leading-normal"
+            >
+              Grasas
+            </p>
+            <p id="grasas"
+              class="text-[#111811] dark:text-gray-100 tracking-light text-2xl font-bold leading-tight"
+            >
+              80g
+            </p>
+          </div>
+        </div>
+        <!-- Action Panel (AI Explanation) -->
+        <div class="p-4 @container">
+          <div
+            class="flex flex-1 flex-col items-start justify-between gap-4 rounded-lg border border-primary/30 bg-primary/10 dark:bg-primary/20 p-5 @[480px]:flex-row @[480px]:items-center"
+          >
+            <div class="flex items-start gap-4">
+              <span
+                class="material-symbols-outlined text-primary dark:text-green-300 mt-1"
+                >psychology</span
+              >
+              <div class="flex flex-col gap-1">
+                <p
+                  class="text-[#111811] dark:text-gray-100 text-base font-bold leading-tight"
+                >
+                  Explicación de la IA
+                </p>
+                <p
+                  class="text-gray-600 dark:text-gray-300 text-base font-normal leading-normal"
+                >
+                  Basado en tu objetivo, IMC y preferencias, hemos diseñado este
+                  plan rico en proteínas para fomentar la recuperación muscular
+                  y con un déficit calórico controlado.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Accordions (Meals) -->
+        <div class="flex flex-col p-4 gap-3">
+          <details
+            class="flex flex-col rounded-lg bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 px-4 py-2 group"
+            open=""
+          >
+            <summary
+              class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none"
+            >
+              <p
+                class="text-[#111811] dark:text-gray-200 text-base font-bold leading-normal"
+              >
+                Desayuno
+              </p>
+              <span
+                class="material-symbols-outlined text-[#111811] dark:text-gray-300 group-open:rotate-180 transition-transform"
+                >expand_more</span
+              >
+            </summary>
+            <p
+              class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
+            >
+              Avena (50g), Frutos Rojos (1 taza), Almendras (20g)
+            </p>
+          </details>
+          <details
+            class="flex flex-col rounded-lg bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 px-4 py-2 group"
+          >
+            <summary
+              class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none"
+            >
+              <p
+                class="text-[#111811] dark:text-gray-200 text-base font-bold leading-normal"
+              >
+                Almuerzo
+              </p>
+              <span
+                class="material-symbols-outlined text-[#111811] dark:text-gray-300 group-open:rotate-180 transition-transform"
+                >expand_more</span
+              >
+            </summary>
+            <p
+              class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
+            >
+              Pechuga de Pollo a la Plancha (150g), Quinoa (1 taza), Brócoli al
+              vapor
+            </p>
+          </details>
+          <details
+            class="flex flex-col rounded-lg bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 px-4 py-2 group"
+          >
+            <summary
+              class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none"
+            >
+              <p
+                class="text-[#111811] dark:text-gray-200 text-base font-bold leading-normal"
+              >
+                Cena
+              </p>
+              <span
+                class="material-symbols-outlined text-[#111811] dark:text-gray-300 group-open:rotate-180 transition-transform"
+                >expand_more</span
+              >
+            </summary>
+            <p
+              class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
+            >
+              Salmón al Horno (150g), Espárragos, Patata Dulce (1 pequeña)
+            </p>
+          </details>
+          <details
+            class="flex flex-col rounded-lg bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 px-4 py-2 group"
+          >
+            <summary
+              class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none"
+            >
+              <p
+                class="text-[#111811] dark:text-gray-200 text-base font-bold leading-normal"
+              >
+                Snacks
+              </p>
+              <span
+                class="material-symbols-outlined text-[#111811] dark:text-gray-300 group-open:rotate-180 transition-transform"
+                >expand_more</span
+              >
+            </summary>
+            <p
+              class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
+            >
+              Yogur griego (1 taza), 1 Manzana
+            </p>
+          </details>
+        </div>
+        <!-- Feedback Section -->
+        <div class="px-4 py-4 flex flex-col items-center gap-3">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            ¿Te gusta este plan?
+          </p>
+          <div class="flex items-center gap-4">
+            <button
+              class="flex items-center justify-center size-12 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              <span
+                class="material-symbols-outlined text-gray-600 dark:text-gray-300"
+                >thumb_up</span
+              >
+            </button>
+            <button
+              class="flex items-center justify-center size-12 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              <span
+                class="material-symbols-outlined text-gray-600 dark:text-gray-300"
+                >thumb_down</span
+              >
+            </button>
+          </div>
+        </div>
+      </main>
+      <!-- Bottom Action Bar -->
+      <div
+        class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-background-dark/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 p-4"
+      >
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button
+            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >
+            <span class="material-symbols-outlined">tune</span>
+            Ajustar Preferencias
+          </button>
+          <button
+            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-black font-bold hover:bg-green-500 transition-colors"
+          >
+            <span class="material-symbols-outlined">refresh</span>
+            Generar Nueva Dieta
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const recomendacion = params.get('recomendacion_difusa');  // "Balanceada", "Alta en proteínas", etc.
+  const dieta = params.get('dieta_neuronal');  // nombre o detalles de dieta
+  const calorias = params.get('calorias');  // opcional, si lo envías desde backend
+  const proteinas = params.get('proteinas');
+  const carbs = params.get('carbs');
+  const grasas = params.get('grasas');
+
+  // Actualizar los elementos del DOM
+  if (recomendacion) document.getElementById('explicacionIA').textContent =
+    `Basado en tu objetivo y tu IMC, la IA recomienda una dieta ${recomendacion}.`;
+  
+  if (calorias) document.getElementById('calorias').textContent = `${calorias} kcal`;
+  if (proteinas) document.getElementById('proteinas').textContent = `${proteinas}g`;
+  if (carbs) document.getElementById('carbs').textContent = `${carbs}g`;
+  if (grasas) document.getElementById('grasas').textContent = `${grasas}g`;
+});
+</script>
+
+  </body>
+</html>

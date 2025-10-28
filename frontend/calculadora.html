@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calculadora de IMC</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#17cf17",
+              "background-light": "#f6f8f6",
+              "background-dark": "#112111",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .gauge-arc {
+            fill: none;
+            stroke-width: 16;
+            stroke-linecap: round;
+            transform-origin: center;
+            transform: rotate(-90deg);
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+  
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+  <div
+        class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-gray-200 dark:border-gray-800"
+      >
+        <div class="flex size-12 shrink-0 items-center">
+          <span
+            class="material-symbols-outlined text-[#111811] dark:text-gray-200"
+            > <a href="./home_page.html">arrow_back</a></span
+          >
+        </div>
+        <h2
+          class="text-[#111811] dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center"
+        >
+          Masa Corporal
+        </h2>
+        <div class="flex w-12 items-center justify-end">
+          <button
+            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-[#111811] dark:text-gray-200 gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0"
+          >
+            <span class="material-symbols-outlined">share</span>
+          </button>
+        </div>
+      </div>
+<main class="flex flex-col items-center justify-center w-full max-w-lg mx-auto p-4 sm:p-6">
+  
+<div class="w-full text-center mb-8">
+  
+<h1 class="text-[#111811] dark:text-white tracking-light text-3xl sm:text-4xl font-bold leading-tight pt-6 pb-2">Calcula tu Índice de Masa Corporal (IMC)</h1>
+<p class="text-gray-600 dark:text-gray-400">Ingresa tus datos para conocer tu estado de salud actual.</p>
+</div>
+
+<form action="" id="formIMC">
+  <div class=" w-full bg-white dark:bg-background-dark dark:border dark:border-gray-700/50 rounded-xl shadow-sm p-6 sm:p-8 space-y-6">
+<div class="flex flex-col gap-6 w-[400px]">
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-[#111811] dark:text-gray-200 text-base font-medium leading-normal pb-2">Altura (en cm)</p>
+<input id="altura" name="altura" step="any" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111811] dark:text-white dark:bg-gray-800 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dce5dc] dark:border-gray-700 bg-white focus:border-primary h-14 placeholder:text-[#638863] dark:placeholder:text-gray-500 p-[15px] text-base font-normal leading-normal" placeholder="Ingresa tu altura" type="number" value=""/>
+</label>
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-[#111811] dark:text-gray-200 text-base font-medium leading-normal pb-2">Peso (en kg)</p>
+<input id="peso" name="peso" step="any" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111811] dark:text-white dark:bg-gray-800 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dce5dc] dark:border-gray-700 bg-white focus:border-primary h-14 placeholder:text-[#638863] dark:placeholder:text-gray-500 p-[15px] text-base font-normal leading-normal" placeholder="Ingresa tu peso" type="number" value=""/>
+</label>
+<label class="flex flex-col min-w-40 flex-1">
+  <p class="text-[#111811] dark:text-gray-200 text-base font-medium leading-normal pb-2">Edad</p>
+  <input id="edad" name="edad" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111811] dark:text-white dark:bg-gray-800 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dce5dc] dark:border-gray-700 bg-white focus:border-primary h-14 placeholder:text-[#638863] dark:placeholder:text-gray-500 p-[15px] text-base font-normal leading-normal" placeholder="Ingresa tu edad" type="number" required />
+</label>
+<label class="flex flex-col min-w-40 flex-1">
+        <p class="text-[#111811] dark:text-gray-200 text-base font-medium leading-normal pb-2">Género</p>
+        <select id="sexo" name="sexo" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111811] dark:text-white dark:bg-gray-800 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dce5dc] dark:border-gray-700 bg-white focus:border-primary h-14 placeholder:text-[#638863] dark:placeholder:text-gray-500 p-[15px] text-base font-normal leading-normal" required>
+          <option value="">Selecciona</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
+      </label>
+</div>
+<div class="flex pt-2">
+<button type="submit" class="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 flex-1 bg-primary text-[#111811] text-lg font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+<span class="truncate"> Calcular Ahora</span>
+</button>
+</div>
+</div>
+</form>
+<div class="w-full mt-10">
+<h2 class="text-[#111811] dark:text-white text-2xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4">Tu Resultado</h2>
+<div class="bg-white dark:bg-background-dark dark:border dark:border-gray-700/50 rounded-xl shadow-sm p-6 sm:p-8 flex flex-col items-center text-center">
+<div class="relative w-48 h-24 mb-4">
+<svg class="w-full h-full" viewbox="0 0 100 50">
+<path class="stroke-gray-200 dark:stroke-gray-700" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-linecap="round" stroke-width="16"></path>
+<path class="gauge-arc stroke-primary" d="M 10 50 A 40 40 0 0 1 90 50" data-value="22.5" style="stroke-dasharray: 125.664; stroke-dashoffset: 62.8318;"></path>
+</svg>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2">
+<p id="imcValor" class="text-4xl font-bold text-[#111811] dark:text-white">22.5</p>
+</div>
+</div>
+<p id="estadoPeso" class="text-xl font-semibold text-primary mb-2">Peso Saludable</p>
+<p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">Tu IMC indica que tienes un peso saludable para tu altura. ¡Sigue así! El IMC es una guía, consulta a un profesional para un análisis completo.</p>
+<div class="flex mt-8">
+<button class="flex min-w-[84px] max-w-sm cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 flex-1 bg-primary/20 dark:bg-primary/30 text-primary dark:text-primary text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">
+<span class="truncate"><a href="./plan_nutri.html">Descubre tu plan de dieta con IA</a></span>
+<span class="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+document.getElementById("formIMC").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const edad = parseFloat(document.getElementById("edad").value);
+  const peso = parseFloat(document.getElementById("peso").value);
+  const altura = parseFloat(document.getElementById("altura").value);
+  const sexo = document.getElementById("sexo").value;
+
+  const data = { edad, peso, altura, sexo };
+
+  console.log("Enviando datos:", data);
+
+  try {
+    const response = await fetch("http://192.168.20.27:5000/api/recomendacion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    console.log("Respuesta del backend:", result);
+
+    // Mostrar resultado en el DOM
+    const imcValor = document.getElementById("imcValor"); 
+    const estadoPeso = document.getElementById("estadoPeso"); 
+    imcValor.textContent = result.imc;
+    estadoPeso.textContent = result.estado;
+  } catch (error) {
+    console.error("Error al enviar los datos:", error);
+    alert("No se pudo conectar con el servidor.");
+  }
+});
+
+</script>
+</body></html>
