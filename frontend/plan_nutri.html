@@ -302,24 +302,64 @@
       </main>
       <!-- Bottom Action Bar -->
       <div
-        class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-background-dark/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 p-4"
-      >
-        <div class="flex flex-col sm:flex-row gap-3">
-          <button
-            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-          >
-            <span class="material-symbols-outlined">tune</span>
-            Ajustar Preferencias
-          </button>
-          <button id="btnGenerar"
-            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-black font-bold hover:bg-green-500 transition-colors"
-          >
-            <span class="material-symbols-outlined">refresh</span>
-            Generar Nueva Dieta
-          </button>
+  class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-background-dark/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 p-4"
+>
+  <div class="flex flex-col sm:flex-row gap-3">
+    <!-- Botón de preferencias -->
+    <button
+      id="btnPreferencias"
+      class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+    >
+      <span class="material-symbols-outlined">tune</span>
+      Ajustar Preferencias
+    </button>
+
+    <button id="btnGenerar"
+      class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-black font-bold hover:bg-green-500 transition-colors"
+    >
+      <span class="material-symbols-outlined">refresh</span>
+      Generar Nueva Dieta
+    </button>
+  </div>
+  
+</div>
+
+<!-- Modal ChatGPT -->
+<div id="chatModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden z-50">
+  <div class="bg-white dark:bg-gray-900 rounded-xl w-11/12 max-w-md p-4 flex flex-col h-[500px] relative">
+    <!-- Cerrar modal -->
+    <button id="closeChatModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
+    <!-- Header -->
+    <h2 class="text-lg font-bold mb-2 text-gray-900 dark:text-gray-100">Chat con IA</h2>
+
+    <!-- Área de chat -->
+    <div id="chatArea" class="flex-1 overflow-y-auto p-2 space-y-2 border-t border-b border-gray-200 dark:border-gray-700">
+      <!-- Mensajes aparecerán aquí -->
+      <div class="flex justify-start">
+        <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-xl max-w-xs">
+          ¡Hola! Soy tu asistente IA.
         </div>
       </div>
     </div>
+
+    <!-- Input -->
+    <div class="mt-2 flex gap-2">
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Escribe tu mensaje..."
+        class="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+      />
+      <button id="sendBtn" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white font-bold hover:bg-green-600 transition-colors">
+        <span class="material-symbols-outlined">send</span>
+      </button>
+    </div>
+  </div>
+</div>
+
     <script>
 window.addEventListener('DOMContentLoaded', () => {
   const historial = JSON.parse(localStorage.getItem("historialIMC"));
@@ -426,6 +466,56 @@ Generado por IA Nutricional 💚`;
 
     // Liberar memoria
     URL.revokeObjectURL(url);
+  });
+  const btnPreferencias = document.getElementById('btnPreferencias');
+  const chatModal = document.getElementById('chatModal');
+  const closeChatModal = document.getElementById('closeChatModal');
+  const chatArea = document.getElementById('chatArea');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  // Abrir modal
+  btnPreferencias.addEventListener('click', () => {
+    chatModal.classList.remove('hidden');
+    chatInput.focus();
+  });
+
+  // Cerrar modal
+  closeChatModal.addEventListener('click', () => {
+    chatModal.classList.add('hidden');
+  });
+
+  chatModal.addEventListener('click', (e) => {
+    if (e.target === chatModal) chatModal.classList.add('hidden');
+  });
+
+  // Enviar mensaje
+  sendBtn.addEventListener('click', () => {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // Agregar mensaje del usuario
+    const userMsg = document.createElement('div');
+    userMsg.className = 'flex justify-end';
+    userMsg.innerHTML = `<div class="bg-green-500 text-white px-3 py-2 rounded-xl max-w-xs">${message}</div>`;
+    chatArea.appendChild(userMsg);
+
+    chatInput.value = '';
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    // Simular respuesta de IA
+    setTimeout(() => {
+      const botMsg = document.createElement('div');
+      botMsg.className = 'flex justify-start';
+      botMsg.innerHTML = `<div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-xl max-w-xs">Respuesta IA: ${message}</div>`;
+      chatArea.appendChild(botMsg);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }, 800);
+  });
+
+  // Enter para enviar
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendBtn.click();
   });
 </script>
 
