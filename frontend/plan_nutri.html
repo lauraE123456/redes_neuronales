@@ -351,9 +351,11 @@ document.getElementById("btnGenerar").addEventListener("click", async () => {
     if (!historial) return alert("No hay datos del usuario disponibles");
 
     const { imc, edad, sexo } = historial.resultado;
-
+    const datos_locales = JSON.parse(localStorage.getItem("historialIMC"));
+    const tipo_dieta=datos_locales.resultado.recomendacion_difusa
+    console.log(tipo_dieta)
     try {
-        const response = await fetch("/api/nueva_dieta", {
+        const response = await fetch(`http://127.0.0.1:8000/api/nueva_dieta/${tipo_dieta}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ imc, edad, sexo })
@@ -361,12 +363,14 @@ document.getElementById("btnGenerar").addEventListener("click", async () => {
 
         const data = await response.json();
         const menu = data.plan_dieta;
-
+      
         // Actualizar DOM con la nueva dieta
         document.getElementById('desayuno').textContent = menu.desayuno;
         document.getElementById('almuerzo').textContent = menu.almuerzo;
         document.getElementById('cena').textContent = menu.cena;
         document.getElementById('snacks').textContent = menu.snacks;
+          historial.resultado = { ...historial.resultado, plan_dieta: menu }; // reemplazamos el plan_dieta
+    localStorage.setItem("historialIMC", JSON.stringify(historial));
 
         // Actualizar explicación IA con tipo de dieta
         document.getElementById('explicacionIA').textContent =
