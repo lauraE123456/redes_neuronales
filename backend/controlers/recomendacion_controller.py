@@ -3,7 +3,7 @@ from services.imc_service import calcular_imc,estado_imc
 from services.logica_difusa_service import obtener_recomendacion_difusa
 from services.red_neuronal_service import predecir_dieta
 #from services.guardar_en_archivo import guardar_en_archivo
-#from services.macros_calorias import calcular_macros
+from services.macros_calorias import calcular_macros
 
 
 recomendacion_bp = Blueprint('recomendacion_bp', __name__)
@@ -30,7 +30,7 @@ def obtener_recomendacion():
         dieta_nn = predecir_dieta(imc_valor, edad_val, sexo_valor)
         print("✅ Dieta predicha:", dieta_nn)
 
-        #calorias, proteinas, carbs, grasas = calcular_macros(imc_valor, edad_val, sexo_valor)
+        calorias, proteinas, carbs, grasas = calcular_macros(imc_valor, edad_val, sexo_valor)
 
         return jsonify({
             "imc": imc_valor,
@@ -38,10 +38,10 @@ def obtener_recomendacion():
             "valor_difuso": round(valor_difuso, 2),
             "recomendacion_difusa": texto_difuso,
             "dieta_neuronal": dieta_nn,
-            #"calorias": calorias,
-            #"proteinas": proteinas,
-            #"carbs": carbs,
-            #"grasas": grasas
+            "calorias": calorias,
+            "proteinas": proteinas,
+            "carbs": carbs,
+            "grasas": grasas
         })
 
     except Exception as e:

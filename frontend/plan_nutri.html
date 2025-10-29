@@ -310,6 +310,7 @@
     <script>
 window.addEventListener('DOMContentLoaded', () => {
   const historial = JSON.parse(localStorage.getItem("historialIMC"));
+  console.log(historial)
   if (!historial) return;
 
   const resultado = historial.resultado;
@@ -317,13 +318,18 @@ window.addEventListener('DOMContentLoaded', () => {
   const dieta = resultado.dieta_neuronal || "No disponible";
 
   document.getElementById('explicacionIA').textContent =
-    `Basado en tu objetivo y tu IMC, la IA recomienda una dieta ${recomendacion}.`;
+    `Basado en tu objetivo y tu IMC, la IA recomienda una dieta ${recomendacion}. Con alimentos cuidadosamente seleccionados para ayudarte a sentirte más fuerte, saludable y lleno de energía.`;
 
   // Si tienes macros/calorías
   if (resultado.calorias) document.getElementById('calorias').textContent = `${resultado.calorias} kcal`;
   if (resultado.proteinas) document.getElementById('proteinas').textContent = `${resultado.proteinas} g`;
   if (resultado.carbs) document.getElementById('carbs').textContent = `${resultado.carbs} g`;
   if (resultado.grasas) document.getElementById('grasas').textContent = `${resultado.grasas} g`;
+
+  if (dieta.desayuno) document.querySelector('details:nth-of-type(1) p').textContent = dieta.desayuno;
+  if (dieta.almuerzo) document.querySelector('details:nth-of-type(2) p').textContent = dieta.almuerzo;
+  if (dieta.cena) document.querySelector('details:nth-of-type(3) p').textContent = dieta.cena;
+  if (dieta.snacks) document.querySelector('details:nth-of-type(4) p').textContent = dieta.snacks;
 });
 
 </script>
