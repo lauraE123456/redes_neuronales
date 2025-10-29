@@ -1,0 +1,104 @@
+[
+    {
+        "usuario": {
+            "edad": 18.0,
+            "peso": 70.5,
+            "altura": 1.7,
+            "sexo": "M"
+        },
+        "imc": {
+            "valor": 24.39,
+            "estado": "Normal"
+        },
+        "recomendacion_difusa": {
+            "valor": 5.0,
+            "texto": "Balanceada"
+        },
+        "dieta_neuronal": "Baja en calorías"
+    },
+    {
+        "usuario": {
+            "edad": 18.0,
+            "peso": 70.7,
+            "altura": 1.7,
+            "sexo": "M"
+        },
+        "imc": {
+            "valor": 24.46,
+            "estado": "Normal"
+        },
+        "recomendacion_difusa": {
+            "valor": 5.0,
+            "texto": "Balanceada"
+        },
+        "dieta_neuronal": "Baja en calorías"
+    },
+    {
+        "usuario": {
+            "edad": 11.0,
+            "peso": 80.0,
+            "altura": 1.7,
+            "sexo": "F"
+        },
+        "imc": {
+            "valor": 27.68,
+            "estado": "Sobrepeso"
+        },
+        "recomendacion_difusa": {
+            "valor": 1.39,
+            "texto": "Baja en calorías"
+        },
+        "dieta_neuronal": "Baja en calorías"
+    },
+    {
+        "usuario": {
+            "edad": 18.0,
+            "peso": 70.0,
+            "altura": 1.9,
+            "sexo": "M"
+        },
+        "imc": {
+            "valor": 19.39,
+            "estado": "Normal"
+        },
+        "recomendacion_difusa": {
+            "valor": 5.99,
+            "texto": "Balanceada"
+        },
+        "dieta_neuronal": "Baja en calorías"
+    },
+    {
+        "usuario": {
+            "edad": 18,
+            "peso": 90.0,
+            "altura": 1.7,
+            "sexo": "M"
+        },
+        "imc": {
+            "valor": 31.14,
+            "estado": "Obesidad"
+        },
+        "recomendacion_difusa": {
+            "valor": 1.67,
+            "texto": "Baja en calorías"
+        },
+        "dieta_neuronal": "Baja en calorías"
+    },
+    {
+        "usuario": {
+            "edad": 18,
+            "peso": 70.8,
+            "altura": 1.7,
+            "sexo": "M"
+        },
+        "imc": {
+            "valor": 24.5,
+            "estado": "Normal"
+        },
+        "recomendacion_difusa": {
+            "valor": 5.0,
+            "texto": "Balanceada"
+        },
+        "dieta_neuronal": "Baja en calorías"
+    }
+]
