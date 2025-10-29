@@ -157,6 +157,13 @@ document.getElementById("formIMC").addEventListener("submit", async function (e)
     const estadoPeso = document.getElementById("estadoPeso"); 
     imcValor.textContent = result.imc;
     estadoPeso.textContent = result.estado;
+    // Guardar en localStorage
+   const historialUsuario = {
+  usuario: data,
+  resultado: result
+};
+localStorage.setItem("historialIMC", JSON.stringify(historialUsuario));
+    console.log(historialUsuario);
   } catch (error) {
     console.error("Error al enviar los datos:", error);
     alert("No se pudo conectar con el servidor.");

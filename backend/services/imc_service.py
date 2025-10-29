@@ -8,9 +8,9 @@ def calcular_imc(peso, altura):
     return round(imc, 2)  # redondeamos a 2 decimales
 
 def estado_imc(imc):
-    if imc < 18.5:
+    if imc < 18:
         return "Bajo peso"
-    elif 18.5 <= imc < 25:
+    elif 18 <= imc < 25:
         return "Normal"
     elif 25 <= imc < 30:
         return "Sobrepeso"

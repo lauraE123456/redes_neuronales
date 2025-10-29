@@ -158,7 +158,7 @@
                 >
                   Explicación de la IA
                 </p>
-                <p
+                <p id="explicacionIA"
                   class="text-gray-600 dark:text-gray-300 text-base font-normal leading-normal"
                 >
                   Basado en tu objetivo, IMC y preferencias, hemos diseñado este
@@ -309,23 +309,23 @@
     </div>
     <script>
 window.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const recomendacion = params.get('recomendacion_difusa');  // "Balanceada", "Alta en proteínas", etc.
-  const dieta = params.get('dieta_neuronal');  // nombre o detalles de dieta
-  const calorias = params.get('calorias');  // opcional, si lo envías desde backend
-  const proteinas = params.get('proteinas');
-  const carbs = params.get('carbs');
-  const grasas = params.get('grasas');
+  const historial = JSON.parse(localStorage.getItem("historialIMC"));
+  if (!historial) return;
 
-  // Actualizar los elementos del DOM
-  if (recomendacion) document.getElementById('explicacionIA').textContent =
+  const resultado = historial.resultado;
+  const recomendacion = resultado.recomendacion_difusa || "No disponible";
+  const dieta = resultado.dieta_neuronal || "No disponible";
+
+  document.getElementById('explicacionIA').textContent =
     `Basado en tu objetivo y tu IMC, la IA recomienda una dieta ${recomendacion}.`;
-  
-  if (calorias) document.getElementById('calorias').textContent = `${calorias} kcal`;
-  if (proteinas) document.getElementById('proteinas').textContent = `${proteinas}g`;
-  if (carbs) document.getElementById('carbs').textContent = `${carbs}g`;
-  if (grasas) document.getElementById('grasas').textContent = `${grasas}g`;
+
+  // Si tienes macros/calorías
+  if (resultado.calorias) document.getElementById('calorias').textContent = `${resultado.calorias} kcal`;
+  if (resultado.proteinas) document.getElementById('proteinas').textContent = `${resultado.proteinas} g`;
+  if (resultado.carbs) document.getElementById('carbs').textContent = `${resultado.carbs} g`;
+  if (resultado.grasas) document.getElementById('grasas').textContent = `${resultado.grasas} g`;
 });
+
 </script>
 
   </body>
