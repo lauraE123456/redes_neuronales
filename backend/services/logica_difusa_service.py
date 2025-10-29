@@ -4,7 +4,7 @@ from skfuzzy import control as ctrl
 
 # === Definición del sistema difuso ===
 edad = ctrl.Antecedent(np.arange(0, 101, 1), 'edad')
-imc = ctrl.Antecedent(np.arange(10, 41, 1), 'imc')
+imc = ctrl.Antecedent(np.arange(10, 41, 0.1), 'imc')
 sexo = ctrl.Antecedent(np.arange(0, 1.1, 0.1), 'sexo')
 recomendacion = ctrl.Consequent(np.arange(0, 11, 1), 'recomendacion')
 
@@ -45,8 +45,13 @@ def obtener_recomendacion_difusa(edad_val, imc_val, sexo_val):
     sistema.input['edad'] = edad_val
     sistema.input['imc'] = imc_val
     sistema.input['sexo'] = sexo_val
-    sistema.compute()
-    valor_difuso = sistema.output['recomendacion']
+    
+    try:
+        sistema.compute()
+        valor_difuso = sistema.output['recomendacion']
+    except Exception as e:
+        print("⚠️ Error difuso:", e)
+        valor_difuso = 0
 
     # Interpretación del resultado difuso
     if valor_difuso < 3:
