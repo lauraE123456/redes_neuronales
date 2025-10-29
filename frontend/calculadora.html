@@ -135,7 +135,8 @@ document.getElementById("formIMC").addEventListener("submit", async function (e)
 
   const edad = parseFloat(document.getElementById("edad").value);
   const peso = parseFloat(document.getElementById("peso").value);
-  const altura = parseFloat(document.getElementById("altura").value);
+  const alturaInput = parseFloat(document.getElementById("altura").value);
+const altura = alturaInput > 10 ? alturaInput / 100 : alturaInput; 
   const sexo = document.getElementById("sexo").value;
 
   const data = { edad, peso, altura, sexo };

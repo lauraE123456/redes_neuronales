@@ -169,6 +169,18 @@
             </div>
           </div>
         </div>
+   <div class="flex justify-end p-4">
+  <button
+    id="btnDescargar"
+    class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-black text-sm font-semibold hover:bg-green-500 transition-colors shadow-md"
+  >
+    <span class="material-symbols-outlined text-base">download</span>
+    Descargar Dieta
+  </button>
+</div>
+
+
+        
         <!-- Accordions (Meals) -->
         <div class="flex flex-col p-4 gap-3">
           <details
@@ -188,7 +200,7 @@
                 >expand_more</span
               >
             </summary>
-            <p
+            <p id="desayuno"
               class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
             >
               Avena (50g), Frutos Rojos (1 taza), Almendras (20g)
@@ -210,7 +222,7 @@
                 >expand_more</span
               >
             </summary>
-            <p
+            <p id="almuerzo"
               class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
             >
               Pechuga de Pollo a la Plancha (150g), Quinoa (1 taza), Brócoli al
@@ -233,7 +245,7 @@
                 >expand_more</span
               >
             </summary>
-            <p
+            <p id="cena"
               class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
             >
               Salmón al Horno (150g), Espárragos, Patata Dulce (1 pequeña)
@@ -255,7 +267,7 @@
                 >expand_more</span
               >
             </summary>
-            <p
+            <p id="snacks"
               class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal pb-2 border-t border-gray-200 dark:border-gray-800 pt-3 mt-2"
             >
               Yogur griego (1 taza), 1 Manzana
@@ -286,6 +298,7 @@
             </button>
           </div>
         </div>
+        
       </main>
       <!-- Bottom Action Bar -->
       <div
@@ -298,7 +311,7 @@
             <span class="material-symbols-outlined">tune</span>
             Ajustar Preferencias
           </button>
-          <button
+          <button id="btnGenerar"
             class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-black font-bold hover:bg-green-500 transition-colors"
           >
             <span class="material-symbols-outlined">refresh</span>
@@ -315,7 +328,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const resultado = historial.resultado;
   const recomendacion = resultado.recomendacion_difusa || "No disponible";
-  const dieta = resultado.dieta_neuronal || "No disponible";
+  const dieta = resultado.plan_dieta || "No disponible";
 
   document.getElementById('explicacionIA').textContent =
     `Basado en tu objetivo y tu IMC, la IA recomienda una dieta ${recomendacion}. Con alimentos cuidadosamente seleccionados para ayudarte a sentirte más fuerte, saludable y lleno de energía.`;
@@ -326,12 +339,90 @@ window.addEventListener('DOMContentLoaded', () => {
   if (resultado.carbs) document.getElementById('carbs').textContent = `${resultado.carbs} g`;
   if (resultado.grasas) document.getElementById('grasas').textContent = `${resultado.grasas} g`;
 
-  if (dieta.desayuno) document.querySelector('details:nth-of-type(1) p').textContent = dieta.desayuno;
-  if (dieta.almuerzo) document.querySelector('details:nth-of-type(2) p').textContent = dieta.almuerzo;
-  if (dieta.cena) document.querySelector('details:nth-of-type(3) p').textContent = dieta.cena;
-  if (dieta.snacks) document.querySelector('details:nth-of-type(4) p').textContent = dieta.snacks;
+  if (dieta.desayuno) document.getElementById('desayuno').textContent = dieta.desayuno;
+  if (dieta.almuerzo) document.getElementById('almuerzo').textContent = dieta.almuerzo;
+  if (dieta.cena) document.getElementById('cena').textContent = dieta.cena;
+  if (dieta.snacks) document.getElementById('snacks').textContent = dieta.snacks;
 });
 
+// ===== Generar nueva dieta =====
+document.getElementById("btnGenerar").addEventListener("click", async () => {
+    const historial = JSON.parse(localStorage.getItem("historialIMC"));
+    if (!historial) return alert("No hay datos del usuario disponibles");
+
+    const { imc, edad, sexo } = historial.resultado;
+
+    try {
+        const response = await fetch("/api/nueva_dieta", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ imc, edad, sexo })
+        });
+
+        const data = await response.json();
+        const menu = data.plan_dieta;
+
+        // Actualizar DOM con la nueva dieta
+        document.getElementById('desayuno').textContent = menu.desayuno;
+        document.getElementById('almuerzo').textContent = menu.almuerzo;
+        document.getElementById('cena').textContent = menu.cena;
+        document.getElementById('snacks').textContent = menu.snacks;
+
+        // Actualizar explicación IA con tipo de dieta
+        document.getElementById('explicacionIA').textContent =
+          `Basado en tu objetivo y tu IMC, la IA recomienda una dieta ${data.tipo_dieta}. Con alimentos cuidadosamente seleccionados para ayudarte a sentirte más fuerte, saludable y lleno de energía.`;
+
+        console.log("Nueva dieta generada:", data.tipo_dieta, menu);
+    } catch (error) {
+        console.error("Error al generar nueva dieta:", error);
+        alert("Ocurrió un error generando la dieta. Intenta de nuevo.");
+    }
+});
+
+//descargar documento dieta
+document.getElementById("btnDescargar").addEventListener("click", () => {
+    // Obtener los datos de la dieta desde el DOM
+    const desayuno = document.getElementById("desayuno")?.textContent || "No especificado";
+    const almuerzo = document.getElementById("almuerzo")?.textContent || "No especificado";
+    const cena = document.getElementById("cena")?.textContent || "No especificado";
+    const snacks = document.getElementById("snacks")?.textContent || "No especificado";
+    const explicacion = document.getElementById("explicacionIA")?.textContent || "";
+
+    // Construir el texto del archivo
+    const contenido = 
+`🧠 Plan Nutricional Personalizado
+
+${explicacion}
+
+🍽️ Dieta Recomendada:
+---------------------------------
+🥣 Desayuno:
+${desayuno}
+
+🍛 Almuerzo:
+${almuerzo}
+
+🌙 Cena:
+${cena}
+
+🍏 Snacks:
+${snacks}
+
+---------------------------------
+Generado por IA Nutricional 💚`;
+
+    // Crear el blob y el enlace de descarga
+    const blob = new Blob([contenido], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = "Mi_Dieta_Personalizada.txt";
+    enlace.click();
+
+    // Liberar memoria
+    URL.revokeObjectURL(url);
+  });
 </script>
 
   </body>

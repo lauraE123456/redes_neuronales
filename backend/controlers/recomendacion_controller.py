@@ -4,6 +4,8 @@ from services.logica_difusa_service import obtener_recomendacion_difusa
 from services.red_neuronal_service import predecir_dieta
 #from services.guardar_en_archivo import guardar_en_archivo
 from services.macros_calorias import calcular_macros
+from services.red_neuronal_service import generar_plan_alimenticio
+import traceback
 
 
 recomendacion_bp = Blueprint('recomendacion_bp', __name__)
@@ -28,6 +30,7 @@ def obtener_recomendacion():
         print("✅ Resultado difuso:", valor_difuso, texto_difuso)
 
         dieta_nn = predecir_dieta(imc_valor, edad_val, sexo_valor)
+        plan_dieta = generar_plan_alimenticio(dieta_nn)
         print("✅ Dieta predicha:", dieta_nn)
 
         calorias, proteinas, carbs, grasas = calcular_macros(imc_valor, edad_val, sexo_valor)
@@ -35,9 +38,10 @@ def obtener_recomendacion():
         return jsonify({
             "imc": imc_valor,
             "estado": estado_valor,
-            "valor_difuso": round(valor_difuso, 2),
+            "valor_difuso": valor_difuso,
             "recomendacion_difusa": texto_difuso,
             "dieta_neuronal": dieta_nn,
+            "plan_dieta": plan_dieta,
             "calorias": calorias,
             "proteinas": proteinas,
             "carbs": carbs,
@@ -46,6 +50,7 @@ def obtener_recomendacion():
 
     except Exception as e:
         print("❌ Error en el backend:", e)
+        traceback.print_exc()  
         return jsonify({"error": str(e)}), 400
 """""def obtener_recomendacion():
     try:
