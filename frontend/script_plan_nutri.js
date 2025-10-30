@@ -111,7 +111,7 @@ const closeChatModal = document.getElementById('closeChatModal');
 const chatArea = document.getElementById('chatArea');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
-
+const btn_caculadora= document.getElementById('btn_caculadora');
 // --- Abrir modal ---
 btnPreferencias.addEventListener('click', () => {
   chatModal.classList.remove('hidden');
@@ -163,16 +163,25 @@ function desbloquearChat() {
 // --- Verificar datos del IMC al iniciar ---
 let datos_ia = JSON.parse(localStorage.getItem("historialIMC"));
 let userName = localStorage.getItem("userName");
+/*function habilitar_btn_calculadora(flag){
+  btn_calculadora.disabled = flag;
+  if (flag) {
+    btn_calculadora.classList.add("opacity-50", "cursor-not-allowed");
+  } else {
+    btn_calculadora.classList.remove("opacity-50", "cursor-not-allowed");
+  }
 
+}*/
 if (!datos_ia || !datos_ia.resultado || !datos_ia.resultado.imc) {
   bloquearChat();
-
+  
   // Esperar a que el usuario calcule el IMC (otro script actualiza localStorage)
   window.addEventListener("storage", (event) => {
     if (event.key === "historialIMC") {
       datos_ia = JSON.parse(event.newValue);
       if (datos_ia && datos_ia.resultado && datos_ia.resultado.imc) {
         desbloquearChat();
+        
         addMessage("✅ ¡Gracias! Ya tengo tus datos. 😊", "bot", "bg-green-200 text-green-800");
         if (!userName) addMessage("¡Hola! 😊 ¿Cómo te llamas?", "bot");
       }
@@ -229,7 +238,20 @@ Según esto, puedo recomendarte rutinas o dietas personalizadas.
     const response = await fetch("http://127.0.0.1:8000/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({  message,
+  contexto: {
+    nombre: userName,
+    peso: datos_ia.usuario.peso,
+    altura: datos_ia.usuario.altura,
+    imc: datos_ia.resultado.imc
+  },
+  reglas: `
+    Eres un asistente experto en nutrición y entrenamiento físico.
+    Solo puedes dar consejos sobre dietas, ejercicios y salud.
+    Si el usuario pregunta algo fuera de este ámbito, responde exactamente:
+    "Solo puedo ayudarte con temas relacionados con tu dieta, entrenamiento o salud física."
+  `
+} )
     });
 
     const data = await response.json();
