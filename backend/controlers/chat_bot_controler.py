@@ -1,40 +1,39 @@
-# backend_gemini.py
-from flask import Flask, request, jsonify
-import requests
 import os
-import GEMINI_API_KEY
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import google.generativeai as genai
+from dotenv import load_dotenv
+from flask import Blueprint
 
-app = Flask(__name__)
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # Tu clave de Gemini
+# --- Cargar variables de entorno (.env) ---
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
 
-@app.route("/api/chatgemini", methods=["POST"])
-def chat_gemini():
-    data = request.json
-    mensaje_usuario = data.get("mensaje")
-    if not mensaje_usuario:
-        return jsonify({"respuesta": "No se recibió ningún mensaje"}), 400
+# --- Configuración del modelo Gemini ---
+genai.configure(api_key=API_KEY)
 
+# --- Ruta del Chat ---
+chat_ia = Blueprint('chat_ia', __name__)
+@chat_ia.route("/api/chat", methods=["POST"])
+def chat():
     try:
-        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0:generateText"
-        headers = {
-            "Content-Type": "application/json",
-            "x-goog-api-key": GEMINI_API_KEY
-        }
-        body = {
-            "prompt": mensaje_usuario,
-            "maxOutputTokens": 200  # limita la cantidad de tokens usados
-        }
+        # 1. Obtener el mensaje del usuario
+        data = request.get_json()
+        user_message = data.get("message", "")
 
-        response = requests.post(url, json=body, headers=headers)
-        response.raise_for_status()
-        result = response.json()
-        
-        # Gemini devuelve la respuesta en result['candidates'][0]['content']
-        respuesta = result.get("candidates", [{}])[0].get("content", "Sin respuesta")
-        return jsonify({"respuesta": respuesta})
+        # 2. Crear el modelo de Gemini
+        model = genai.GenerativeModel("gemini-2.0-flash")
+
+        # 3. Generar la respuesta
+        response = model.generate_content(user_message)
+
+        # 4. Extraer texto de la respuesta
+        text = response.text if hasattr(response, "text") else "No se recibió texto."
+
+        # 5. Devolver la respuesta al frontend
+        return jsonify({"reply": text})
 
     except Exception as e:
-        print("Error Gemini:", e)
-        return jsonify({"respuesta": f"Error: {str(e)}"}), 500
-
+        print("Error al contactar la API de Gemini:", e)
+        return jsonify({"error": "Lo siento, no pude procesar tu solicitud."}), 500
