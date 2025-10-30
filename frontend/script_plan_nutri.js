@@ -174,11 +174,9 @@ sendBtn.addEventListener('click', async () => {
   const datos_ia = JSON.parse(localStorage.getItem("historialIMC"));
 
   const systemPrompt = `
-Hola ${userName}, de acuerdo con tu peso de ${datos_ia.usuario.peso} kg y tu altura de ${datos_ia.usuario.altura} m..."
+Hola ${message}, de acuerdo con tu peso de ${datos_ia.usuario.peso} kg y tu altura de ${datos_ia.usuario.altura} m..."
 Luego continúa con una recomendación breve y clara relacionada con su objetivo.
 Pregunta si desea generar un tipo de entrenamiento o una dieta personalizada.
-
-La pregunta del usuario es: "${message}".
 `;
   // Si aún no hay nombre, guardar el que acaba de decir
   if (!userName) {
