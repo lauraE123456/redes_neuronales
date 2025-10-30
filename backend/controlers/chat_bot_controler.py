@@ -27,7 +27,7 @@ def chat():
 
         # 3. Generar la respuesta
         response = model.generate_content(user_message)
-
+        
         # 4. Extraer texto de la respuesta
         text = response.text if hasattr(response, "text") else "No se recibió texto."
 

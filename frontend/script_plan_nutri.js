@@ -1,19 +1,7 @@
 
 window.addEventListener('DOMContentLoaded', () => {
   const historial = JSON.parse(localStorage.getItem("historialIMC"));
-  // 3️⃣ Verificar si existen los datos del usuario
-  if (!historial || !historial.usuario || !historial.usuario.peso || !historial.usuario.altura) {
-    const botMsg = document.createElement('div');
-    botMsg.className = 'flex justify-start';
-    botMsg.innerHTML = `
-      <div class="bg-yellow-200 text-yellow-800 px-3 py-2 rounded-xl max-w-xs">
-        Antes de continuar, por favor calcula tus datos (peso, altura, IMC, etc.) para que pueda personalizar tus recomendaciones.
-      </div>`;
-    chatArea.appendChild(botMsg);
-    chatArea.scrollTop = chatArea.scrollHeight;
-    return; // ❌ Detiene el envío al backend
-  }
-  if (!historial) return;
+ 
 
   const resultado = historial.resultado;
   const recomendacion = resultado.recomendacion_difusa || "No disponible";
@@ -129,16 +117,7 @@ btnPreferencias.addEventListener('click', () => {
   chatModal.classList.remove('hidden');
   chatInput.focus();
 });
-// Si no hay nombre guardado, pedirlo
-  if (!localStorage.getItem("userName")) {
-    const namePrompt = document.createElement('div');
-    namePrompt.className = 'flex justify-start';
-    namePrompt.innerHTML = `
-      <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-xl max-w-xs">
-        ¡Hola! 😊 ¿Cómo te llamas?
-      </div>`;
-    chatArea.appendChild(namePrompt);
-  }
+
 
 
 
@@ -151,51 +130,99 @@ chatModal.addEventListener('click', (e) => {
   if (e.target === chatModal) chatModal.classList.add('hidden');
 });
 
+// --- Función para agregar mensajes al chat ---
+function addMessage(text, side = "bot", color = "bg-gray-200 text-gray-800") {
+  const msg = document.createElement("div");
+  msg.className = `flex ${side === "bot" ? "justify-start" : "justify-end"}`;
+  msg.innerHTML = `<div class="${color} px-3 py-2 rounded-xl max-w-xs whitespace-pre-line">${text}</div>`;
+  chatArea.appendChild(msg);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
 
+// --- Función para bloquear el chat ---
+function bloquearChat() {
+  addMessage(
+    "⚠️ Antes de continuar, por favor calcula tus datos (peso, altura, IMC, etc.) para que pueda personalizar tus recomendaciones.",
+    "bot",
+    "bg-yellow-200 text-yellow-800"
+  );
+  chatInput.disabled = true;
+  sendBtn.disabled = true;
+  chatInput.placeholder = "Por favor calcula tu IMC antes de continuar...";
+  sendBtn.classList.add("opacity-50", "cursor-not-allowed");
+}
+
+// --- Función para desbloquear el chat ---
+function desbloquearChat() {
+  chatInput.disabled = false;
+  sendBtn.disabled = false;
+  chatInput.placeholder = "Escribe tu mensaje...";
+  sendBtn.classList.remove("opacity-50", "cursor-not-allowed");
+}
+
+// --- Verificar datos del IMC al iniciar ---
+let datos_ia = JSON.parse(localStorage.getItem("historialIMC"));
+let userName = localStorage.getItem("userName");
+
+if (!datos_ia || !datos_ia.resultado || !datos_ia.resultado.imc) {
+  bloquearChat();
+
+  // Esperar a que el usuario calcule el IMC (otro script actualiza localStorage)
+  window.addEventListener("storage", (event) => {
+    if (event.key === "historialIMC") {
+      datos_ia = JSON.parse(event.newValue);
+      if (datos_ia && datos_ia.resultado && datos_ia.resultado.imc) {
+        desbloquearChat();
+        addMessage("✅ ¡Gracias! Ya tengo tus datos. 😊", "bot", "bg-green-200 text-green-800");
+        if (!userName) addMessage("¡Hola! 😊 ¿Cómo te llamas?", "bot");
+      }
+    }
+  });
+} else {
+  // Si ya hay datos, preguntar por el nombre si no existe
+  if (!userName) addMessage("¡Hola! 😊 ¿Cómo te llamas?", "bot");
+}
 
 // --- Enviar mensaje ---
-sendBtn.addEventListener('click', async () => {
+sendBtn.addEventListener("click", async () => {
   const message = chatInput.value.trim();
-  // 3️⃣ Verificar si existen los datos del usuario
-
   if (!message) return;
 
-  // 1️⃣ Mostrar mensaje del usuario
-  const userMsg = document.createElement('div');
-  userMsg.className = 'flex justify-end';
-  userMsg.innerHTML = `<div class="bg-green-500 text-white px-3 py-2 rounded-xl max-w-xs">${message}</div>`;
-  chatArea.appendChild(userMsg);
-  chatInput.value = '';
-  chatArea.scrollTop = chatArea.scrollHeight;
+  // Mostrar mensaje del usuario
+  addMessage(message, "user", "bg-green-500 text-white");
+  chatInput.value = "";
 
-  let userName = localStorage.getItem("userName");
-    
-  // Prompt personalizado\
-  const datos_ia = JSON.parse(localStorage.getItem("historialIMC"));
+  // --- Releer datos actualizados ---
+  datos_ia = JSON.parse(localStorage.getItem("historialIMC"));
+  userName = localStorage.getItem("userName");
 
-  const systemPrompt = `
-Hola ${message}, de acuerdo con tu peso de ${datos_ia.usuario.peso} kg y tu altura de ${datos_ia.usuario.altura} m..."
-Luego continúa con una recomendación breve y clara relacionada con su objetivo.
-Pregunta si desea generar un tipo de entrenamiento o una dieta personalizada.
-`;
-  // Si aún no hay nombre, guardar el que acaba de decir
-  if (!userName) {
-    localStorage.setItem("userName", message);
-    
-    const botMsg = document.createElement('div');
-    botMsg.className = 'flex justify-start';
-    botMsg.innerHTML = systemPrompt;
-    chatArea.appendChild(botMsg);
-    return; // No llamar al backend todavía
+  // 1️⃣ Si no hay datos del IMC, advertir y salir
+  if (!datos_ia || !datos_ia.resultado || !datos_ia.resultado.imc) {
+    bloquearChat();
+    return;
   }
 
-  // Mostrar mensaje "Pensando..."
-  const botMsg = document.createElement('div');
-  botMsg.className = 'flex justify-start';
+  // 2️⃣ Si no hay nombre, guardar el que acaba de decir
+  if (!userName) {
+    localStorage.setItem("userName", message);
+    userName = message;
+
+    const systemPrompt = `
+¡Encantado de conocerte, ${userName}! 😄  
+De acuerdo con tu peso de ${datos_ia.usuario.peso} kg y tu altura de ${datos_ia.usuario.altura} m, tu IMC es ${datos_ia.resultado.imc}.
+Según esto, puedo recomendarte rutinas o dietas personalizadas.  
+¿Deseas que te genere un tipo de entrenamiento o una dieta?`;
+
+    addMessage(systemPrompt, "bot", "bg-blue-100 text-blue-800");
+    return; // 🔹 No llamar al backend todavía
+  }
+
+  // 3️⃣ Si ya hay nombre e IMC, hablar con la IA (Gemini vía backend Flask)
+  const botMsg = document.createElement("div");
+  botMsg.className = "flex justify-start";
   botMsg.innerHTML = `<div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-xl max-w-xs italic">Pensando...</div>`;
   chatArea.appendChild(botMsg);
   chatArea.scrollTop = chatArea.scrollHeight;
-
 
   try {
     // 3️⃣ Llamar al backend (Flask con Gemini)
