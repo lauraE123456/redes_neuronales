@@ -1,6 +1,7 @@
 from flask import Flask
 from controlers.recomendacion_controller import recomendacion_bp
 from controlers.nueva_dieta_controller import nueva_dieta_bp
+from controlers.chat_bot_controler import chat_ia
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -9,6 +10,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5500"}})
 app.register_blueprint(recomendacion_bp)
 app.register_blueprint(nueva_dieta_bp)
+app.register_blueprint(chat_ia)
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
